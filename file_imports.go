@@ -52,7 +52,7 @@ func updateFileImportTimestamp(fileImportId int64) {
 	}
 }
 
-func insertOrUpdateFileImports(path string, ids Ids) {
+func insertOrUpdateFileImports(path string, dirId int64) {
 	var err error
 	var fileSet *token.FileSet
 	var goFileAST *ast.File
@@ -72,11 +72,11 @@ func insertOrUpdateFileImports(path string, ids Ids) {
 	}
 
 	// Insert ast record
-	file = maybeInsertFile(ids.dirId, relPath)
+	file = maybeInsertFile(dirId, relPath)
 	if file.Id != 0 {
 		file = File{
-			Id:    updateFileTimestamp(ids.dirId, relPath),
-			dirId: ids.dirId,
+			Id:    updateFileTimestamp(dirId, relPath),
+			dirId: dirId,
 		}
 	}
 	for _, imp := range goFileAST.Imports {

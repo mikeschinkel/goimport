@@ -104,7 +104,7 @@ func maybeInsertImports(ids Ids) {
 			// No need to read non-Go files
 			goto end
 		}
-		insertOrUpdateFileImports(path, ids)
+		insertOrUpdateFileImports(path, ids.dirId)
 		processedFiles++
 		if processedFiles%100 == 0 {
 			logf("Processed %d files\n", processedFiles)
