@@ -37,7 +37,7 @@ type importInfo struct {
 
 func updateImportsForIds(ids Ids) {
 	_, err := tx.Exec(
-		"UPDATE dirs SET repo_id = ?, updated_at = DATETIME('now') WHERE id = ? AND repo_id <> ?", ids.repoId, ids.dirId, ids.repoId,
+		"UPDATE dirs SET repo_id = ?, updated_at = datetime('now') WHERE id = ? AND repo_id <> ?", ids.repoId, ids.dirId, ids.repoId,
 	)
 	if err != nil {
 		log.Fatalf("Error updating directory metadata: %v\n", err)
@@ -62,7 +62,7 @@ func verifyImportByIdentity(importId int64) {
 }
 
 func insertImport(importPath string) (repoId int64) {
-	result, err := tx.Exec(`INSERT INTO imports (import_path, updated_at) VALUES (?, DATETIME('now'))`, importPath)
+	result, err := tx.Exec(`INSERT INTO imports (import_path, updated_at) VALUES (?, datetime('now'))`, importPath)
 	if err != nil {
 		// Probably already exists
 		// TODO Inspect sentinel error here to handle fail on non-expected errors
