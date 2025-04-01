@@ -45,6 +45,19 @@ goimports -v -mode=files
 
 Run `goimports` without arguments to see all available options.
 
+## Bulk Processing
+The following Bash command will run `goimports` in each child subdirectory of the current directory allowing you to slurp up import information on multiple repos if you have them all cloned to a single directory:
+
+```shell
+find . \
+   -maxdepth 1 \
+   -type d \
+   -not -path "." \
+   | xargs \
+      -I{} \
+      sh -c 'cd "{}" && echo "Processing $(basename {})" && goimports -mode none'
+```
+
 ## Note on Code Quality
 
 ⚠️ **Disclaimer**: This project was intentionally built as a quick utility tool for personal use and deliberately avoids following certain Go best practices:
