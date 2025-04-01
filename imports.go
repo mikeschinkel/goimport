@@ -80,11 +80,23 @@ func maybeInsertImports(ids Ids) {
 	// Walk the directory tree and collect imports
 	processedFiles := 0
 	err := filepath.Walk(inputs.rootPath, func(path string, file os.FileInfo, err error) error {
+		var exists bool
 		if err != nil {
 			// We got an error on entry? Bail...
 			goto end
 		}
 		if file.IsDir() {
+			if path != inputs.rootPath {
+				exists, err = dirExists(filepath.Join(path, ".git"))
+			}
+			if err != nil {
+				log.Fatalf("Error walking directory: %v\n", err)
+			}
+			if exists {
+				logf("Skipping Git repository at: %s\n", path)
+				err = filepath.SkipDir
+				goto end
+			}
 			// No need to read anything from a directory
 			goto end
 		}

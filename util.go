@@ -4,6 +4,7 @@ import (
 	"bufio"
 	"database/sql"
 	"errors"
+	"fmt"
 	"io"
 	"log"
 	"os"
@@ -159,4 +160,24 @@ func getWorkingDir(rootPath string) (wd string) {
 	}
 end:
 	return wd
+}
+
+func dirExists(path string) (exists bool, err error) {
+	var info os.FileInfo
+	info, err = os.Stat(path)
+	if err != nil {
+		if os.IsNotExist(err) {
+			err = nil
+			goto end
+		}
+		err = fmt.Errorf("error checking directory %s: %v", path, err)
+		goto end
+	}
+	if !info.IsDir() {
+		// Path exists but is not a directory
+		goto end
+	}
+	exists = true
+end:
+	return exists, err
 }
