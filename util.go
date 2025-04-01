@@ -58,15 +58,6 @@ func mustClose(c io.Closer) {
 	}
 }
 
-func mustLoadSQL(filename string) string {
-	content, err := os.ReadFile(filename)
-	if err != nil {
-		// Fatal error if we can't load the SQL file
-		log.Fatalf("Failed to load SQL file %s: %v", filename, err)
-	}
-	return string(content)
-}
-
 func getDBPath(dbPath string) string {
 	var err error
 	var homeDir, configDir string
