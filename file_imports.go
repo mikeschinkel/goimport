@@ -9,13 +9,6 @@ import (
 	"strings"
 )
 
-func deleteFileImportsForDirId(dirId int64) {
-	_, err := tx.Exec(`DELETE FROM file_imports WHERE file_id IN (SELECT id FROM files WHERE dir_id = ?)`, dirId)
-	if err != nil {
-		log.Fatalf("Error deleting file imports (dir_id=%d): %v\n", dirId, err)
-	}
-}
-
 func deleteFileImportsForDirIdOlderThan(dirId int64, timestamp string) {
 	_, err := tx.Exec(`DELETE FROM file_imports WHERE file_id IN (SELECT id FROM files WHERE dir_id=? AND updated_at < ?)`, dirId, timestamp)
 	if err != nil {
@@ -23,14 +16,9 @@ func deleteFileImportsForDirIdOlderThan(dirId int64, timestamp string) {
 	}
 }
 
-func selectFileImportForFileIdAndImportId(fileId, importId int64) (fileImportId int64) {
-	_ = tx.QueryRow(`SELECT id FROM file_imports WHERE file_id = ? AND import_id = ?`, fileId, importId).Scan(&fileImportId)
-	return fileImportId
-}
-
 func insertFileImport(fileId, importId int64) (fileImportId int64) {
 	// Insert new repository
-	result, err := tx.Exec(`INSERT INTO file_imports (file_id, import_id, updated_at) VALUES (?,?, datetime('now'))`, fileId, importId)
+	result, err := tx.Exec(`INSERT INTO file_imports (file_id, import_id, updated_at) VALUES (?,?, DATETIME('now'))`, fileId, importId)
 	if err != nil {
 		// Probably already exists
 		// TODO Inspect sentinel error here to handle fail on non-expected errors
@@ -46,7 +34,7 @@ end:
 
 func updateFileImportTimestamp(fileImportId int64) {
 	// Insert new repository
-	_, err := tx.Exec(`UPDATE file_imports SET updated_at = datetime('now') WHERE id = ?`, fileImportId)
+	_, err := tx.Exec(`UPDATE file_imports SET updated_at = DATETIME('now') WHERE id = ?`, fileImportId)
 	if err != nil {
 		log.Fatalf("Error updating file import (file_import_id=%d): %v\n", fileImportId, err)
 	}
