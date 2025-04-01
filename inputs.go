@@ -86,7 +86,7 @@ func initializeInputs() (inputs Inputs) {
 		os.Exit(1)
 	}
 	inputs.outputMode = ensureValidOutput(*inputs.outputModeFlag)
-	inputs.sort = ensureValidSort(*inputs.sortFlag, inputs.outputMode)
+	inputs.sort = ensureValidSort(*inputs.sortFlag)
 	if inputs.outputMode == NoneOutput {
 		inputs.verbose = true
 	}
@@ -104,7 +104,7 @@ end:
 	return OutputMode(outputMode)
 }
 
-func ensureValidSort(sort string, outputMode OutputMode) SortType {
+func ensureValidSort(sort string) SortType {
 	switch SortType(sort) {
 	case FileSort, ImportSort, CountSort:
 		// S'all good
