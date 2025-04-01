@@ -14,6 +14,7 @@ type Inputs struct {
 	dbPathFlag     *string
 	sortFlag       *string
 	verboseFlag    *bool
+	noUpdateFlag   *bool
 	workingDir     string
 	rootPath       string
 	gitOriginURL   string
@@ -22,6 +23,7 @@ type Inputs struct {
 	outputMode     OutputMode
 	sort           SortType
 	verbose        bool
+	noUpdate       bool
 	repoId         int
 }
 
@@ -63,6 +65,7 @@ func initializeInputs() (inputs Inputs) {
 	log.SetOutput(os.Stderr)
 
 	inputs = Inputs{
+		noUpdateFlag:   flag.Bool("noupdate", false, "Bypassing updating the database"),
 		verboseFlag:    flag.Bool("verbose", false, "Display verbose output (forced to true when -mode=none)"),
 		rootDirFlag:    flag.String("dir", ".", "Root directory to scan"),
 		outputModeFlag: flag.String("mode", "", "Display mode:\n\tfiles   — to show files with their imports,\n\timports — to show imports with their files,\n\tdirs    — to show imports by directory,\n\trepos   — to show imports by repo, or\n\tnone    — to show only database update/log messages"),
@@ -71,6 +74,7 @@ func initializeInputs() (inputs Inputs) {
 	}
 	flag.Parse()
 
+	inputs.noUpdate = *inputs.noUpdateFlag
 	inputs.workingDir = getWorkingDir(*inputs.rootDirFlag)
 	inputs.rootPath = getRootPath(inputs)
 	inputs.gitOriginURL = getGitOrigin(inputs.rootPath)

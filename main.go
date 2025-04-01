@@ -17,7 +17,9 @@ func main() {
 	defer mustClose(db)
 	defer mustRollback(tx)
 	ids := loadIdsFromInputs()
-	updateDB(ids)
+	if !inputs.noUpdate {
+		updateDB(ids)
+	}
 	displayOutput(ids)
 	mustCommit(tx)
 }
